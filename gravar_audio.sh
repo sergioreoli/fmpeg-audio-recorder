@@ -1,15 +1,21 @@
 #!/bin/bash
 
-#Descubra a sua Device exemplo
-#list sources short | grep usb
+echo "--- Detectando dispositivo de áudio USB ---"
 
-# Saída 
-# 49	alsa_output.usb-Solid_State_System_Co._Ltd._USB_PnP_Audio_Device_000000000000-00.analog-stereo.monitor	PipeWire	s16le 2ch 48000Hz	RUNNING
-# 50	alsa_input.usb-Solid_State_System_Co._Ltd._USB_PnP_Audio_Device_000000000000-00.analog-stereo	PipeWire	s16le 2ch 48000Hz	RUNNING
+# Detecta automaticamente o dispositivo USB de áudio
+INPUT_DEVICE=$(pactl list sources short | grep -i "usb" | grep "monitor" | head -n 1 | awk '{print $2}')
 
-# Define a fonte de monitoramento de áudio USB
-# COPIE O NOME COMPLETO DA SUA SAÍDA DE ÁUDIO (com .monitor no final)
-INPUT_DEVICE="alsa_output.usb-Solid_State_System_Co._Ltd._USB_PnP_Audio_Device_000000000000-00.analog-stereo.monitor"
+# Verifica se encontrou algum dispositivo
+if [ -z "$INPUT_DEVICE" ]; then
+    echo "ERRO: Nenhum dispositivo USB de áudio encontrado!"
+    echo ""
+    echo "Dispositivos disponíveis:"
+    pactl list sources short
+    exit 1
+fi
+
+echo "Dispositivo detectado: ${INPUT_DEVICE}"
+echo ""
 
 # Define o nome do arquivo de saída com um timestamp (data e hora)
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
@@ -23,4 +29,5 @@ echo "----------------------------------------------"
 # Executa o comando FFmpeg
 ffmpeg -f pulse -i "$INPUT_DEVICE" -ac 2 -c:a mp3 -q:a 0 "$OUTPUT_FILE"
 
-echo "Gravação finalizada. Arquivo salvo."
+echo ""
+echo "Gravação finalizada. Arquivo salvo: ${OUTPUT_FILE}"
