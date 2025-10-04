@@ -1,5 +1,12 @@
 #!/bin/bash
 
+#Descubra a sua Device exemplo
+#list sources short | grep usb
+
+# Saída 
+# 49	alsa_output.usb-Solid_State_System_Co._Ltd._USB_PnP_Audio_Device_000000000000-00.analog-stereo.monitor	PipeWire	s16le 2ch 48000Hz	RUNNING
+# 50	alsa_input.usb-Solid_State_System_Co._Ltd._USB_PnP_Audio_Device_000000000000-00.analog-stereo	PipeWire	s16le 2ch 48000Hz	RUNNING
+
 # Define a fonte de monitoramento de áudio USB
 # COPIE O NOME COMPLETO DA SUA SAÍDA DE ÁUDIO (com .monitor no final)
 INPUT_DEVICE="alsa_output.usb-Solid_State_System_Co._Ltd._USB_PnP_Audio_Device_000000000000-00.analog-stereo.monitor"
